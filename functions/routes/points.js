@@ -9,7 +9,7 @@ const { getPoints,
 
 const router = Router();
 
-router.get('/', getPoints);
+router.get('/' ,getPoints);
 
 router.post('/', postPoints);
 

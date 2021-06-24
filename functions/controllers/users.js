@@ -1,9 +1,8 @@
-const admin = require('firebase-admin');
-const { user } = require('firebase-functions/lib/providers/auth');
+
 const md5 = require('md5');
 const { dbFirebase } = require('../config/firebaseConnection');
 const db = dbFirebase();
-const FieldValue = admin.firestore.FieldValue;
+
 
 const getUsers = async (req, res) => {
 
@@ -23,17 +22,23 @@ const getUsers = async (req, res) => {
 
         res.status(200).json(
             { response }
-        )
+        );
+
     } catch {
+
         res.status(500).json({
             msg: 'sth gone wrong'
-        })
+        });
+
     }
 }
 
 
 const postUsers = async (req, res) => {
+
     const { password, ...user } = req.body;
+
+
 
     if (password) {
         user.password = md5(password)
@@ -41,12 +46,9 @@ const postUsers = async (req, res) => {
 
     try {
 
-        await db.collection('users').add({
-            user
-        })
+        await db.collection('users').add(user);
         res.status(201).json({
-            msg: 'Exitoso',
-            user
+            msg: 'User created succesfully'
         })
 
     } catch (error) {
@@ -62,53 +64,55 @@ const postUsers = async (req, res) => {
 const putUser = async (req, res) => {
 
     try {
-        
-        const newInfo = {}
-        const data = req.body
 
-        const { id } = req.params
+        const newInfo = {}
+
+        const data = req.body;
+        const { id } = req.params;
+
         const userData = db.collection('users').doc(id);
-        const doc =  await userData.get();
+        const doc = await userData.get();
         const userInfo = doc.data();
 
-        
         for (let user in userInfo) {
-            if (data[user]) {
+            
+            if (user === 'password' && data[user]) {
+                newInfo[user] = md5(data['password']);
+
+            } else if (data[user]) {
                 newInfo[user] = data[user]
-            }
-            else {
+            } else {
                 newInfo[user] = userInfo[user]
             }
-        }
-        
-        // console.log(user)
+        };
+
+        await db.collection('users').doc(id).update(newInfo);
 
         res.status(200).json({
-            msg: 'User updated',
-            data,
-            userInfo,
-            newInfo
+            msg: 'User updated'
         })
 
 
     } catch (error) {
-        res.status(400).json({
-            msg: 'Sth gone wrong',
-            error
+        res.status(500).json({
+            msg: 'Sth gone wrong'
         })
     }
 
-}
+};
 
 
 const deleteUser = async (req, res) => {
 
     try {
-        const doc = db.collection('users').id(req.params.id);
+
+        const { id } = req.params;
+
+        const doc = db.collection('users').doc(id);
         await doc.delete()
 
         return res.status(200).json(
-            { msg: 'Deleted from db' }
+            { msg: 'User Deleted succesfully' }
         )
 
     } catch (error) {
