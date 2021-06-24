@@ -1,0 +1,17 @@
+{
+  "name": "apirest",
+  "version": "0.0.1",
+  "description": "This is a apirest with firebase",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "RRSG",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-validator": "^6.12.0",
+    "md5": "^2.3.0"
+  }
+}
