@@ -1,13 +1,16 @@
-const admin = require('firebase-admin');
+
 const { dbFirebase } = require('../config/firebaseConnection');
 const db = dbFirebase();
-const FieldValue = admin.firestore.FieldValue;
+const admin = require('firebase-admin');
+
 
 const getPoints = async (req, res) => {
 
     try {
 
-        let points = await db.collection('users').doc('points').collection('points').get()
+        const { id } = req.params;
+
+        let points = await db.collection('users').doc(id).collection('points').get()
         const snapshot = points.docs
 
         const response = snapshot.map((sub) =>
@@ -19,57 +22,57 @@ const getPoints = async (req, res) => {
         );
 
 
+
         res.status(200).json(
             response
         )
     } catch (error) {
-        res.status(400).json({
-            msg: 'sth gone wrong',
-            error: error
+        res.status(500).json({
+            msg: 'sth gone wrong'
         })
     }
 
-}
+};
 
 const postPoints = async (req, res) => {
 
     try {
 
+        const { id } = req.params;
         const { quantity, reason } = req.body;
 
-        await db.collection('users').doc('points').collection('points').add({
+        await db.collection('users').doc(id).collection('points').add({
             quantity,
-            reason,
-            timestamp: FieldValue.timestamp()
+            reason
         })
 
         res.status(200).json({
-            msg: 'points created'
-        })
+            msg: `Points added to perfil, Total: ${quantity}`
+        });
 
     } catch (error) {
-        res.status(400).json({
-            error
+        res.status(500).json({
+            msg: 'Sth gone wrong'
         })
     }
 
 };
 
 const putPoint = async (req, res) => {
+
     try {
 
 
         const { id } = req.params;
-        const { quantity, points } = req.body;
+        const { quantity, reason } = req.body;
 
-        await db.collection('users').doc('points').collection('points').doc(id).update({
-            quantity,
-            points,
-            timestamp: FieldValue.serverTimestamp()
-        })
+        await db.collection('users').doc(id).collection('points').doc(id).set({
+            quantity: admin.firestore.FieldValue.increment(quantity),
+            reason
+        }, { merge: true });
 
         res.status(400).json({
-            msg: 'Points '
+            msg: 'Points added to your profile '
         })
 
     } catch (error) {
@@ -84,7 +87,25 @@ const putPoint = async (req, res) => {
 };
 const deletePoint = async (req, res) => {
 
+    try {
 
+        const {idUser, idPoints} = req.params; 
+
+        await db.collection('users').doc(idUser).collection('points').doc(idPoints).delete();
+
+        
+        res.status(200).json({
+            msg: 'Points deleted'
+        });
+
+
+
+
+    } catch (error) {
+        res.status(500).json({
+            msg: 'Sth gone wrong'
+        })
+    }
 
 };
 

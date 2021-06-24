@@ -7,7 +7,7 @@ class Server {
     constructor() {
         this.app = express();
         this.usersPath = '/api/users';
-        this.pointsPath = '/api/users/:id/points';
+        this.pointsPath = '/api/user';
 
         this.init();
         

@@ -1,3 +1,5 @@
+
+const { firestore } = require('firebase-functions');
 const { dbFirebase } = require('../config/firebaseConnection');
 const db = dbFirebase();
 
@@ -26,7 +28,22 @@ const userIdValid = async (id) =>  {
 
 };
 
+
+const pointsIdValid = async (req, res, next) =>  {
+    
+    const {idUser, idPoints} = req.params;
+
+    const queryDB = await db.collection('users').doc(idUser).collection('points').doc(idPoints).get();
+    
+    if (!queryDB.exists) {
+
+        res.status(400).json({msg: 'Points are not valid'})
+    }
+    next()
+};
+
 module.exports = {
     existsEmail,
-    userIdValid
+    userIdValid,
+    pointsIdValid
 }
