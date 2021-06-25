@@ -2,6 +2,7 @@ const admin = require('firebase-admin');
 const functions = require('firebase-functions');
 const cors = require('cors');
 const express = require('express');
+
 class Server {
 
     constructor() {
@@ -29,7 +30,9 @@ class Server {
     };
 
     functions() {
+
         return functions.https.onRequest(this.app);
+        
     };
 
     middleware() { 

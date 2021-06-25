@@ -37,13 +37,16 @@ const pointsIdValid = async (req, res, next) =>  {
     
     if (!queryDB.exists) {
 
-        res.status(400).json({msg: 'Points are not valid'})
+        res.status(400).json({msg: 'Points are not valid'});
+        
     }
-    next()
+
+    next();
+
 };
 
 module.exports = {
     existsEmail,
     userIdValid,
     pointsIdValid
-}
+};

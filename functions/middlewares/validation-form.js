@@ -16,5 +16,7 @@ const validationForm = (req, res, next) => {
 
 
 module.exports = {
+    
     validationForm
-}
+    
+};

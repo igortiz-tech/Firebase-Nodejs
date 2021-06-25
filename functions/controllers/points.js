@@ -85,6 +85,8 @@ const putPoint = async (req, res) => {
     }
 
 };
+
+
 const deletePoint = async (req, res) => {
 
     try {
@@ -109,9 +111,10 @@ const deletePoint = async (req, res) => {
 
 };
 
+
 module.exports = {
     getPoints,
     postPoints,
     putPoint,
     deletePoint
-}
+};

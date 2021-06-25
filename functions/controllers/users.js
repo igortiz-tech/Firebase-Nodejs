@@ -31,18 +31,17 @@ const getUsers = async (req, res) => {
         });
 
     }
-}
+};
 
 
 const postUsers = async (req, res) => {
 
     const { password, ...user } = req.body;
 
-
-
     if (password) {
         user.password = md5(password)
-    }
+    };
+    
 
     try {
 

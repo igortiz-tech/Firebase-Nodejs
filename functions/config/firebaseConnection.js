@@ -4,14 +4,14 @@ const admin = require('firebase-admin');
 const dbFirebase = () => {
 
 
-    return db = admin.firestore()
+    return admin.firestore();
 
 
-}
+};
 
 
 module.exports = {
     dbFirebase
-}
+};
 
 
